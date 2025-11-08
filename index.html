@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portfolio de cybersécurité - Write-ups CTF et classements de compétitions">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Portfolio de cybersécurité - Write-ups CTF et classements de compétitions" />
 
   <meta http-equiv="Content-Security-Policy"
         content="
@@ -16,96 +16,118 @@
         ">
 
   <title>Portfolio CTF | Cybersécurité</title>
+
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <style>
-    * {margin:0; padding:0; box-sizing:border-box;}
-    :root {
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root{
       --bg-dark:#0a0e27; --bg-card:#1a1f3a; --accent:#00ff88;
       --text:#e0e0e0; --text-dim:#a0a0a0; --border:#2a3f5f;
     }
-    body {
-      font-family:'Segoe UI',sans-serif;
-      background:var(--bg-dark); color:var(--text); line-height:1.6;
+
+    html,body{height:100%}
+    body{
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:var(--bg-dark);
+      color:var(--text);
+      line-height:1.6;
       overflow-x:hidden;
+      position:relative;
     }
-    header {
+
+    /* discrete background canvas container */
+    #matrixBg{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:0.06; /* très discret */
+      mix-blend-mode:screen;
+    }
+
+    header{
       background:linear-gradient(135deg,var(--bg-card) 0%,#0f1329 100%);
-      padding:2rem 5%; border-bottom:2px solid var(--accent);
+      padding:2rem 5%;
+      border-bottom:2px solid var(--accent);
+      position:relative;
+      z-index:10;
     }
-    h1 {font-size:2.5rem; color:var(--accent); margin-bottom:0.5rem;}
-    .tagline {color:var(--text-dim);}
-    nav {
-      background:var(--bg-card); padding:1rem 5%; position:sticky; top:0;
-      border-bottom:1px solid var(--border); z-index:100;
+    .header-content{max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:1rem;}
+    h1{font-size:2.2rem; color:var(--accent); text-shadow:0 0 12px rgba(0,255,136,0.18); margin-bottom:0;}
+    .tagline{color:var(--text-dim); font-size:1rem;}
+
+    nav{
+      background:var(--bg-card);
+      padding:1rem 5%;
+      position:sticky;
+      top:0;
+      z-index:20;
+      border-bottom:1px solid var(--border);
     }
-    .nav-content {max-width:1200px; margin:0 auto; display:flex; gap:2rem;}
-    .nav-btn {
-      background:none; border:none; color:var(--text-dim);
-      cursor:pointer; padding:0.5rem 1rem; transition:0.3s;
+    .nav-content{max-width:1200px; margin:0 auto; display:flex; gap:1rem;}
+    .nav-btn{
+      background:none; border:none; color:var(--text-dim); font-size:1rem;
+      cursor:pointer; padding:0.5rem 1rem; transition:all .2s;
     }
-    .nav-btn:hover,.nav-btn.active {color:var(--accent);}
-    .section {display:none;}
-    .section.active {display:block;}
-    main {max-width:1200px; margin:0 auto; padding:3rem 5%;}
-    .stats-grid {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-      gap:1.5rem; margin-bottom:3rem;
-    }
-    .stat-card {
-      background:var(--bg-card); padding:1.5rem; border-radius:10px;
-      border:1px solid var(--border);
-    }
-    .stat-value {font-size:2.5rem; color:var(--accent); font-weight:bold;}
-    .writeup-grid {display:grid; gap:1.5rem;}
-    .writeup-card {
-      background:var(--bg-card); border:1px solid var(--border);
-      border-radius:10px; padding:1.5rem; cursor:pointer;
-    }
-    .writeup-card:hover {border-color:var(--accent);}
-    .writeup-title {font-size:1.3rem; color:var(--accent);}
-    .difficulty {padding:0.3rem 0.8rem; border-radius:5px; font-weight:bold;}
-    .difficulty.easy{background:#00ff8844;color:#00ff88;}
-    .difficulty.medium{background:#ffaa0044;color:#ffaa00;}
-    .difficulty.hard{background:#ff004444;color:#ff4444;}
-    .ranking-table {
-      width:100%; background:var(--bg-card); border-radius:10px;
-      border:1px solid var(--border);
-    }
-    .ranking-table th,.ranking-table td {padding:1rem; text-align:left;}
-    .ranking-table th {background:var(--border); color:var(--accent);}
-    .rank.gold{color:#ffd700;} .rank.silver{color:#c0c0c0;}
-    .rank.bronze{color:#cd7f32;}
-    footer {
-      background:var(--bg-card); padding:2rem 5%; text-align:center;
-      border-top:1px solid var(--border); margin-top:5rem; color:var(--text-dim);
-    }
-    .terminal-effect{font-family:'Courier New',monospace;color:var(--accent);}
-    .markdown-content {
-      max-width:900px; margin:0 auto; background:var(--bg-card);
-      padding:2rem; border-radius:10px; border:1px solid var(--border);
-    }
-    .back-btn {
-      background:var(--border); color:var(--text); border:none;
-      padding:0.5rem 1rem; border-radius:5px; cursor:pointer; margin-bottom:1rem;
-    }
-    .back-btn:hover{background:var(--accent);color:var(--bg-dark);}
+    .nav-btn:hover, .nav-btn.active{ color:var(--accent); }
+    main{max-width:1200px; margin:0 auto; padding:3rem 5%; position:relative; z-index:15;}
+
+    .section{ display:none; animation:fadeIn .35s ease-in; }
+    .section.active{ display:block; }
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+
+    .stats-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.25rem; margin-bottom:2rem; }
+    .stat-card{ background:var(--bg-card); padding:1.25rem; border-radius:8px; border:1px solid var(--border); }
+    .stat-value{ font-size:2rem; color:var(--accent); font-weight:700; }
+
+    .writeup-grid{ display:grid; gap:1rem; }
+    .writeup-card{ background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:1rem; cursor:pointer; transition:all .18s; }
+    .writeup-card:hover{ transform:translateY(-4px); border-color:var(--accent); }
+    .writeup-title{ font-size:1.1rem; color:var(--accent); margin-bottom:0.25rem; }
+    .writeup-meta{ color:var(--text-dim); font-size:0.9rem; margin-bottom:0.5rem; }
+    .difficulty{ padding:0.2rem .6rem; border-radius:6px; font-weight:700; font-size:0.85rem; }
+    .difficulty.easy{ background:#00ff8844; color:#00ff88; }
+    .difficulty.medium{ background:#ffaa0044; color:#ffaa00; }
+    .difficulty.hard{ background:#ff004444; color:#ff4444; }
+
+    .ranking-table{ width:100%; background:var(--bg-card); border-radius:8px; overflow:hidden; border:1px solid var(--border); }
+    .ranking-table th,.ranking-table td{ padding:0.8rem; text-align:left; }
+    .ranking-table th{ background:var(--border); color:var(--accent); }
+    .rank.gold{ color:#ffd700; } .rank.silver{ color:#c0c0c0; } .rank.bronze{ color:#cd7f32; }
+
+    .markdown-content{ max-width:900px; margin:0 auto; background:var(--bg-card); padding:1.5rem; border-radius:8px; border:1px solid var(--border); }
+    .back-btn{ background:var(--border); color:var(--text); border:none; padding:.45rem .8rem; border-radius:6px; cursor:pointer; margin-bottom:1rem; }
+    .back-btn:hover{ background:var(--accent); color:var(--bg-dark); }
+
+    footer{ background:var(--bg-card); padding:2rem 5%; text-align:center; border-top:1px solid var(--border); margin-top:3.5rem; color:var(--text-dim); position:relative; z-index:10; }
+
+    /* small helpers */
+    .loading{ text-align:center; padding:2rem; color:var(--accent); }
+    .error{ background:#2b0000aa; border:1px solid #ff0044; padding:0.75rem; border-radius:6px; color:#ffb3b3; }
+    .tags{ display:flex; gap:.4rem; flex-wrap:wrap; margin-top:.5rem; }
+    .tag{ background:var(--border); padding:.2rem .45rem; border-radius:5px; color:var(--text-dim); font-size:.85rem; }
   </style>
 </head>
 
 <body>
-  <div id="matrixBg"></div>
+  <!-- discrete canvas background layer -->
+  <canvas id="matrixBg" aria-hidden="true"></canvas>
 
   <header>
-    <h1 class="terminal-effect">&gt; Portfolio CTF_</h1>
-    <p class="tagline">Spécialiste en Cybersécurité | Compétiteur CTF</p>
+    <div class="header-content">
+      <div>
+        <h1 class="terminal-effect">&gt; Portfolio CTF_</h1>
+        <p class="tagline">Spécialiste en Cybersécurité | Compétiteur CTF</p>
+      </div>
+    </div>
   </header>
 
   <nav>
     <div class="nav-content">
-      <button class="nav-btn active" onclick="showSection('overview')">Vue d'ensemble</button>
-      <button class="nav-btn" onclick="showSection('writeups')">Write-ups</button>
-      <button class="nav-btn" onclick="showSection('rankings')">Classements</button>
+      <button class="nav-btn active" onclick="showSection('overview', this)">Vue d'ensemble</button>
+      <button class="nav-btn" onclick="showSection('writeups', this)">Write-ups</button>
+      <button class="nav-btn" onclick="showSection('rankings', this)">Classements</button>
     </div>
   </nav>
 
@@ -117,15 +139,17 @@
         <div class="stat-card"><div class="stat-value" id="statWriteups">-</div><div>Write-ups publiés</div></div>
         <div class="stat-card"><div class="stat-value" id="statRanking">-</div><div>Meilleur classement</div></div>
       </div>
-      <h2 style="color:var(--accent);margin-bottom:1.5rem;">📌 Write-ups récents</h2>
+
+      <h2 style="color:var(--accent); margin-bottom:1rem;">📌 Write-ups récents</h2>
       <div class="writeup-grid" id="recentWriteups"><div class="loading">Chargement...</div></div>
     </section>
 
     <section id="writeups" class="section">
       <div id="writeupsList">
-        <h2 style="color:var(--accent);margin-bottom:1.5rem;">📝 Tous les Write-ups</h2>
+        <h2 style="color:var(--accent); margin-bottom:1rem;">📝 Tous les Write-ups</h2>
         <div class="writeup-grid" id="allWriteups"><div class="loading">Chargement...</div></div>
       </div>
+
       <div id="writeupDetail" style="display:none;">
         <button class="back-btn" onclick="showWriteupsList()">← Retour à la liste</button>
         <div class="markdown-content" id="writeupContent"></div>
@@ -133,20 +157,22 @@
     </section>
 
     <section id="rankings" class="section">
-      <h2 style="color:var(--accent);margin-bottom:1.5rem;">🏆 Classements Compétitions</h2>
+      <h2 style="color:var(--accent); margin-bottom:1rem;">🏆 Classements Compétitions</h2>
       <div id="rankingsTable"><div class="loading">Chargement...</div></div>
     </section>
   </main>
 
   <footer>
     <p>&copy; 2024 Portfolio CTF | Cybersécurité</p>
-    <p class="terminal-effect">Stay curious, stay secure_</p>
+    <p class="terminal-effect" style="margin-top:.5rem;">Stay curious, stay secure_</p>
   </footer>
 
   <script>
+    // ====== Data ======
     let writeupsData = [];
     let rankingsData = [];
 
+    // ====== Load local data (data/writeups.json & data/rankings.json) ======
     async function loadData() {
       try {
         const w = await fetch('data/writeups.json');
@@ -154,12 +180,17 @@
           writeupsData = await w.json();
           displayWriteups();
           updateStats();
+        } else {
+          document.getElementById('recentWriteups').innerHTML = '<p style="color:var(--text-dim)">Aucun write-up disponible</p>';
         }
+
         const r = await fetch('data/rankings.json');
         if (r.ok) {
           rankingsData = await r.json();
           displayRankings();
           updateStats();
+        } else {
+          document.getElementById('rankingsTable').innerHTML = '<p style="color:var(--text-dim)">Aucun classement disponible</p>';
         }
       } catch (e) {
         console.error('Erreur chargement:', e);
@@ -167,115 +198,185 @@
       }
     }
 
+    // ====== Display writeups (overview + all) ======
     function displayWriteups() {
-      const recent = document.getElementById('recentWriteups');
-      const all = document.getElementById('allWriteups');
-      if (writeupsData.length === 0) {
-        recent.innerHTML = all.innerHTML = '<p style="color:var(--text-dim);">Aucun write-up disponible</p>';
+      const recentContainer = document.getElementById('recentWriteups');
+      const allContainer = document.getElementById('allWriteups');
+
+      if (!writeupsData || writeupsData.length === 0) {
+        recentContainer.innerHTML = '<p style="color:var(--text-dim)">Aucun write-up disponible</p>';
+        allContainer.innerHTML = '<p style="color:var(--text-dim)">Aucun write-up disponible</p>';
         return;
       }
-      const card = (w) => `
-        <div class="writeup-card" onclick="loadWriteupDetail('${w.file}')">
-          <div style="display:flex;justify-content:space-between;">
+
+      const cardHTML = (w) => `
+        <div class="writeup-card" onclick="openWriteupFromOverview('${escapeHtmlAttr(w.file)}')">
+          <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
             <div>
-              <h3 class="writeup-title">${w.title}</h3>
-              <div class="writeup-meta"><span>🏆 ${w.ctf}</span> | <span>📅 ${w.date}</span></div>
+              <h3 class="writeup-title">${escapeHtml(w.title)}</h3>
+              <div class="writeup-meta">🏆 ${escapeHtml(w.ctf)} • 📅 ${escapeHtml(w.date)}</div>
             </div>
-            <span class="difficulty ${w.difficulty.toLowerCase()}">${w.difficulty}</span>
+            <span class="difficulty ${escapeHtml(w.difficulty).toLowerCase()}">${escapeHtml(w.difficulty)}</span>
           </div>
-          <p>${w.description}</p>
-        </div>`;
-      recent.innerHTML = writeupsData.slice(0,3).map(card).join('');
-      all.innerHTML = writeupsData.map(card).join('');
+          <p style="margin-top:.6rem;color:var(--text-dim)">${escapeHtml(w.description)}</p>
+          <div class="tags">${(w.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+        </div>
+      `;
+
+      // récents : utiliser openWriteupFromOverview pour basculer puis charger
+      recentContainer.innerHTML = writeupsData.slice(0, 3).map(w => cardHTML(w)).join('');
+      // tous : on garde la même structure mais l'action devrait aussi marcher (éventuellement redondant)
+      allContainer.innerHTML = writeupsData.map(w => `
+        <div class="writeup-card" onclick="loadWriteupDetail('${escapeHtmlAttr(w.file)}')">
+          <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
+            <div>
+              <h3 class="writeup-title">${escapeHtml(w.title)}</h3>
+              <div class="writeup-meta">🏆 ${escapeHtml(w.ctf)} • 📅 ${escapeHtml(w.date)}</div>
+            </div>
+            <span class="difficulty ${escapeHtml(w.difficulty).toLowerCase()}">${escapeHtml(w.difficulty)}</span>
+          </div>
+          <p style="margin-top:.6rem;color:var(--text-dim)">${escapeHtml(w.description)}</p>
+          <div class="tags">${(w.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+        </div>
+      `).join('');
     }
 
-    async function loadWriteupDetail(file) {
+    // helper to sanitize strings used directly in HTML
+    function escapeHtml(str){
+      if (str == null) return '';
+      return String(str).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
+    }
+    // helper to sanitize attributes inside single quotes
+    function escapeHtmlAttr(s){
+      return escapeHtml(String(s)).replace(/'/g, "&#39;");
+    }
+
+    // ====== Open from overview: switch section then load ======
+    function openWriteupFromOverview(filename){
+      // switch section and then load. We allow small delay so DOM switch happens.
+      showSection('writeups', document.querySelector(".nav-btn[onclick*='writeups']") || null);
+      // normalize filename when fetching (see loadWriteupDetail)
+      setTimeout(()=> loadWriteupDetail(filename), 120);
+    }
+
+    // ====== Load and render a write-up markdown file from /data/writeups/... ======
+    async function loadWriteupDetail(file){
       try {
-        const res = await fetch(`data/writeups/${file}`);
-        if (!res.ok) throw new Error();
+        // accept either "buffer.md" or "writeups/buffer.md"
+        const path = file.startsWith('writeups/') ? `data/${file}` : `data/writeups/${file}`;
+        const res = await fetch(path);
+        if (!res.ok) throw new Error('write-up non trouvé');
         const md = await res.text();
         document.getElementById('writeupContent').innerHTML = marked.parse(md);
-        document.getElementById('writeupsList').style.display='none';
-        document.getElementById('writeupDetail').style.display='block';
-      } catch {
-        alert('Write-up introuvable.');
+        document.getElementById('writeupsList').style.display = 'none';
+        document.getElementById('writeupDetail').style.display = 'block';
+        // ensure we are on writeups section
+        document.getElementById('writeups').classList.add('active');
+      } catch (e) {
+        console.error('Erreur loadWriteupDetail:', e);
+        alert('Impossible de charger le write-up.');
       }
     }
 
-    function showWriteupsList() {
-      document.getElementById('writeupDetail').style.display='none';
-      document.getElementById('writeupsList').style.display='block';
+    function showWriteupsList(){
+      document.getElementById('writeupDetail').style.display = 'none';
+      document.getElementById('writeupsList').style.display = 'block';
     }
 
-    function displayRankings() {
-      const c = document.getElementById('rankingsTable');
-      if (rankingsData.length===0) {
-        c.innerHTML='<p style="color:var(--text-dim);">Aucun classement disponible</p>';
+    // ====== Rankings rendering ======
+    function displayRankings(){
+      const container = document.getElementById('rankingsTable');
+      if (!rankingsData || rankingsData.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-dim)">Aucun classement disponible</p>';
         return;
       }
-      const rankClass=(r)=>r===1?'gold':r===2?'silver':r===3?'bronze':'';
-      const rankLabel=(r)=>r===1?'1er':r===2?'2e':r===3?'3e':r+'e';
-      c.innerHTML=`<table class="ranking-table"><thead><tr>
-        <th>Rang</th><th>Compétition</th><th>Date</th><th>Points</th><th>Participants</th><th>Équipe</th>
-      </tr></thead><tbody>
-      ${rankingsData.map(r=>`
-        <tr>
-          <td><span class="rank ${rankClass(r.rank)}">${rankLabel(r.rank)}</span></td>
-          <td>${r.competition}</td><td>${r.date}</td><td>${r.points}</td>
-          <td>${r.rank}/${r.participants}</td><td>${r.team}</td>
-        </tr>`).join('')}
-      </tbody></table>`;
+      const getRankClass = r => r===1?'gold':r===2?'silver':r===3?'bronze':'';
+      const getRankLabel = r => r===1?'1er':r===2?'2e':r===3?'3e':`${r}e`;
+      container.innerHTML = `
+        <table class="ranking-table">
+          <thead><tr><th>Rang</th><th>Compétition</th><th>Date</th><th>Points</th><th>Participants</th><th>Équipe</th></tr></thead>
+          <tbody>
+            ${rankingsData.map(r=>`
+              <tr>
+                <td><span class="rank ${getRankClass(r.rank)}">${getRankLabel(r.rank)}</span></td>
+                <td>${escapeHtml(r.competition)}</td>
+                <td>${escapeHtml(r.date)}</td>
+                <td>${escapeHtml(r.points)}</td>
+                <td>${escapeHtml(r.rank)}/${escapeHtml(r.participants)}</td>
+                <td>${escapeHtml(r.team)}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
     }
 
-    function updateStats() {
-      if (writeupsData.length>0) {
-        document.getElementById('statWriteups').textContent=writeupsData.length;
-        document.getElementById('statCTFs').textContent=new Set(writeupsData.map(w=>w.ctf)).size;
-        document.getElementById('statChallenges').textContent=writeupsData.length;
+    // ====== Stats ======
+    function updateStats(){
+      if (writeupsData && writeupsData.length>0){
+        document.getElementById('statWriteups').textContent = writeupsData.length;
+        document.getElementById('statCTFs').textContent = new Set(writeupsData.map(w => w.ctf)).size;
+        document.getElementById('statChallenges').textContent = writeupsData.length;
       }
-      if (rankingsData.length>0) {
-        const best=Math.min(...rankingsData.map(r=>r.rank));
-        const obj=rankingsData.find(r=>r.rank===best);
-        document.getElementById('statRanking').textContent=`${best}/${obj.participants}`;
+      if (rankingsData && rankingsData.length>0){
+        const best = Math.min(...rankingsData.map(r=>r.rank));
+        const obj = rankingsData.find(r=>r.rank===best);
+        if (obj) document.getElementById('statRanking').textContent = `${best}/${obj.participants}`;
       }
     }
 
-    function showError(m) {
+    // ====== Error display ======
+    function showError(msg){
       ['recentWriteups','allWriteups','rankingsTable'].forEach(id=>{
-        const el=document.getElementById(id);
-        if(el)el.innerHTML=`<div class="error">${m}</div>`;
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = `<div class="error">${escapeHtml(msg)}</div>`;
       });
     }
 
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
-      if(id==='writeups')showWriteupsList();
+    // ====== Section navigation ======
+    function showSection(sectionId, btn){
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      if (btn) btn.classList.add('active');
     }
 
-    const canvas=document.createElement('canvas');
-    const ctx=canvas.getContext('2d');
-    document.getElementById('matrixBg').appendChild(canvas);
-    canvas.width=window.innerWidth; canvas.height=window.innerHeight;
-    const chars='01アイウエオカキクケコサシスセソタチツテト';
-    const fontSize=14;
-    const drops=Array(Math.floor(canvas.width/fontSize)).fill(1);
-    function drawMatrix(){
-      ctx.fillStyle='rgba(10,14,39,0.05)';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle='#00ff88'; ctx.font=fontSize+'px monospace';
-      for(let i=0;i<drops.length;i++){
-        const text=chars[Math.floor(Math.random()*chars.length)];
-        ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-        if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)drops[i]=0;
-        drops[i]++;
+    // ====== Matrix background (subtle) ======
+    (function matrixBg(){
+      const canvas = document.getElementById('matrixBg');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      const setSize = () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; };
+      setSize();
+
+      const chars = '01アイウエオカキクケコサシスセソタチツテト';
+      const fontSize = 10; // petit pour discret
+      const columns = Math.floor(width / fontSize);
+      const drops = new Array(columns).fill(1).map(()=> Math.floor(Math.random()*height/fontSize));
+
+      function draw(){
+        ctx.fillStyle = 'rgba(10,10,20,0.04)'; // très léger trail
+        ctx.fillRect(0,0,width,height);
+        ctx.fillStyle = 'rgba(0,255,136,0.08)'; // faible visibilité
+        ctx.font = fontSize + 'px monospace';
+        for (let i=0;i<drops.length;i++){
+          const text = chars[Math.floor(Math.random()*chars.length)];
+          ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+          if (drops[i]*fontSize > height && Math.random() > 0.99) drops[i]=0;
+          drops[i]++;
+        }
       }
-    }
-    setInterval(drawMatrix,50);
-    window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
-    window.addEventListener('DOMContentLoaded',loadData);
+      let interval = setInterval(draw, 80);
+      window.addEventListener('resize', () => { setSize(); });
+      // stop when page is hidden to save CPU
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { clearInterval(interval); interval = null; }
+        else if (!interval) { interval = setInterval(draw, 80); }
+      });
+    })();
+
+    // ====== Init ======
+    window.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>
 </html>
