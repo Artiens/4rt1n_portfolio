@@ -6,7 +6,7 @@
       "difficulty": "Hard",
       "description": "Exploitation d'un buffer overflow avec ASLR et DEP activés",
       "tags": ["pwn", "binary-exploitation", "ROP"],
-      "file": "buffer.md"
+      "file": "writeups/buffer.md"
     },
     {
       "title": "SQL Injection Paradise",
