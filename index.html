@@ -180,17 +180,30 @@
     }
 
     function updateStats(){
-      if(writeupsData.length){
-        statWriteups.textContent=writeupsData.length;
-        statCTFs.textContent=new Set(writeupsData.map(w=>w.ctf)).size;
-        statChallenges.textContent=writeupsData.length;
+      const elWriteups = document.getElementById('statWriteups');
+      const elCTFs = document.getElementById('statCTFs');
+      const elChallenges = document.getElementById('statChallenges');
+      const elRanking = document.getElementById('statRanking');
+
+      if (writeupsData && writeupsData.length > 0) {
+        if (elWriteups) elWriteups.textContent = writeupsData.length;
+        if (elCTFs) elCTFs.textContent = new Set(writeupsData.map(w => w.ctf)).size;
+        if (elChallenges) elChallenges.textContent = writeupsData.length;
+      } else {
+        if (elWriteups) elWriteups.textContent = 0;
+        if (elCTFs) elCTFs.textContent = 0;
+        if (elChallenges) elChallenges.textContent = 0;
       }
-      if(rankingsData.length){
-        const best=Math.min(...rankingsData.map(r=>r.rank));
-        const obj=rankingsData.find(r=>r.rank===best);
-        statRanking.textContent=`${best}/${obj.participants}`;
+
+      if (rankingsData && rankingsData.length > 0) {
+        const bestRank = Math.min(...rankingsData.map(r => r.rank));
+        const bestObj = rankingsData.find(r => r.rank === bestRank) || {};
+        if (elRanking) elRanking.textContent = bestObj.participants ? `${bestRank}/${bestObj.participants}` : `${bestRank}`;
+      } else {
+        if (elRanking) elRanking.textContent = '-';
       }
     }
+
 
     function showSection(id,btn){
       document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
