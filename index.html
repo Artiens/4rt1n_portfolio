@@ -185,24 +185,30 @@
       const elChallenges = document.getElementById('statChallenges');
       const elRanking = document.getElementById('statRanking');
 
-      if (writeupsData && writeupsData.length > 0) {
-        if (elWriteups) elWriteups.textContent = writeupsData.length;
-        if (elCTFs) elCTFs.textContent = new Set(writeupsData.map(w => w.ctf)).size;
-        if (elChallenges) elChallenges.textContent = writeupsData.length;
-      } else {
-        if (elWriteups) elWriteups.textContent = 0;
-        if (elCTFs) elCTFs.textContent = 0;
-        if (elChallenges) elChallenges.textContent = 0;
-      }
+      // writeups = nombre de fichiers markdown
+      const writeupsCount = writeupsData.length;
+      if (elWriteups) elWriteups.textContent = writeupsCount;
+      if (elChallenges) elChallenges.textContent = writeupsCount;
 
-      if (rankingsData && rankingsData.length > 0) {
+      // CTFs participés = nombre de compétitions distinctes dans rankings.json
+      const ctfCount = rankingsData.length
+        ? new Set(rankingsData.map(r => r.competition)).size
+        : 0;
+      if (elCTFs) elCTFs.textContent = ctfCount;
+
+      // Meilleur classement
+      if (rankingsData.length) {
         const bestRank = Math.min(...rankingsData.map(r => r.rank));
-        const bestObj = rankingsData.find(r => r.rank === bestRank) || {};
-        if (elRanking) elRanking.textContent = bestObj.participants ? `${bestRank}/${bestObj.participants}` : `${bestRank}`;
+        const best = rankingsData.find(r => r.rank === bestRank);
+        if (elRanking)
+          elRanking.textContent = best && best.participants
+            ? `${bestRank}/${best.participants}`
+            : `${bestRank}`;
       } else {
         if (elRanking) elRanking.textContent = '-';
       }
     }
+
 
 
     function showSection(id,btn){
