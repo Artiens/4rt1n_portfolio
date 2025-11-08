@@ -1,18 +1,26 @@
 [
     {
-      "rank": 1,
-      "competition": "CyberSec Challenge 2024",
-      "date": "Novembre 2024",
-      "points": 2850,
-      "participants": 200,
-      "team": "Solo"
+        "rank": 85,
+        "competition": "ECW",
+        "date": "Octobre 2025",
+        "points": 3031,
+        "participants": 616,
+        "team": "Solo"
     },
     {
-      "rank": 2,
-      "competition": "Root-Me CTF",
-      "date": "Octobre 2024",
+      "rank": 1,
+      "competition": "CTF recrutement DVC 2035",
+      "date": "Septembre 2025",
+      "points": "12000",
+      "participants": 200,
+      "team": "Solo"
+    },    
+    {
+      "rank": 50,
+      "competition": "Objectif Eagle CTF",
+      "date": "Novembre 2024",
       "points": 2640,
       "participants": 350,
-      "team": "Team Alpha"
+      "team": "DVC"
     }
   ]
