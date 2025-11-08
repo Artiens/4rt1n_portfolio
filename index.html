@@ -6,7 +6,7 @@
 <title>Portfolio CTF | Cybersécurité</title>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg-dark:#0a0e27;
   --bg-card:#1a1f3a;
@@ -19,15 +19,13 @@ body{
   font-family:'Segoe UI',Tahoma,sans-serif;
   background:var(--bg-dark);
   color:var(--text);
-  line-height:1.6;
   overflow-x:hidden;
   position:relative;
 }
 canvas#matrix{
   position:fixed;
   top:0;left:0;
-  width:100%;
-  height:100%;
+  width:100%;height:100%;
   z-index:-1;
   opacity:0.35;
   pointer-events:none;
@@ -37,29 +35,25 @@ header{
   padding:2rem 5%;
   border-bottom:2px solid var(--accent);
 }
-h1{
-  font-size:2.3rem;
-  color:var(--accent);
-  text-shadow:0 0 10px rgba(0,255,136,0.3);
-}
-.tagline{color:var(--text-dim);}
+h1{font-size:2.3rem;color:var(--accent);text-shadow:0 0 10px rgba(0,255,136,.3)}
+.tagline{color:var(--text-dim)}
 nav{
   background:var(--bg-card);
   padding:1rem 5%;
   border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:10;
 }
-.nav-content{display:flex;gap:2rem;max-width:1200px;margin:auto;}
+.nav-content{display:flex;gap:2rem;max-width:1200px;margin:auto}
 .nav-btn{
   background:none;border:none;cursor:pointer;
   color:var(--text-dim);
   padding:.5rem 1rem;
   transition:.3s;
 }
-.nav-btn:hover,.nav-btn.active{color:var(--accent);}
-main{max-width:1200px;margin:auto;padding:2rem 5%;}
-.section{display:none;}
-.section.active{display:block;}
+.nav-btn:hover,.nav-btn.active{color:var(--accent)}
+main{max-width:1200px;margin:auto;padding:2rem 5%}
+.section{display:none}
+.section.active{display:block}
 .writeup-card{
   background:var(--bg-card);
   border:1px solid var(--border);
@@ -69,8 +63,8 @@ main{max-width:1200px;margin:auto;padding:2rem 5%;}
   cursor:pointer;
   transition:.3s;
 }
-.writeup-card:hover{border-color:var(--accent);transform:translateX(3px);}
-.writeup-title{color:var(--accent);}
+.writeup-card:hover{border-color:var(--accent);transform:translateX(3px)}
+.writeup-title{color:var(--accent)}
 footer{
   background:var(--bg-card);
   border-top:1px solid var(--border);
@@ -100,9 +94,9 @@ footer{
 
 <nav>
   <div class="nav-content">
-    <button class="nav-btn active" onclick="showSection('overview', event)">Vue d'ensemble</button>
-    <button class="nav-btn" onclick="showSection('writeups', event)">Write-ups</button>
-    <button class="nav-btn" onclick="showSection('rankings', event)">Classements</button>
+    <button class="nav-btn active" onclick="showSection('overview',event)">Vue d'ensemble</button>
+    <button class="nav-btn" onclick="showSection('writeups',event)">Write-ups</button>
+    <button class="nav-btn" onclick="showSection('rankings',event)">Classements</button>
   </div>
 </nav>
 
@@ -114,9 +108,9 @@ footer{
 
   <section id="writeups" class="section">
     <div id="writeupsList"></div>
-    <div id="writeupDetail" style="display:none;">
+    <div id="writeupDetail" style="display:none">
       <button onclick="showWriteupsList()">← Retour</button>
-      <div id="writeupContent" class="markdown-content"></div>
+      <div id="writeupContent"></div>
     </div>
   </section>
 
@@ -125,9 +119,7 @@ footer{
   </section>
 </main>
 
-<footer>
-  <p>&copy; 2025 Portfolio CTF</p>
-</footer>
+<footer><p>&copy; 2025 Portfolio CTF</p></footer>
 
 <script>
 const baseUrl="https://raw.githubusercontent.com/Artiens/4rt1n_portfolio/main/data";
@@ -140,84 +132,69 @@ async function loadData(){
     displayWriteups();
     const r=await fetch(`${baseUrl}/rankings.json`);
     rankingsData=await r.json();
-  }catch(e){
-    showError('Erreur de chargement des données');
-  }
+  }catch{showError("Erreur de chargement");}
 }
-
 function displayWriteups(){
-  const recent=document.getElementById('recentWriteups');
-  const all=document.getElementById('writeupsList');
-  if(!writeupsData.length){recent.innerHTML='<p>Aucun write-up disponible.</p>';return;}
+  const recent=document.getElementById("recentWriteups");
+  const all=document.getElementById("writeupsList");
+  if(!writeupsData.length){recent.innerHTML="<p>Aucun write-up.</p>";return;}
   const card=w=>`
-    <div class="writeup-card" onclick="loadWriteupDetail('${w.file}')">
-      <h3 class="writeup-title">${w.title}</h3>
-      <p>${w.description}</p>
-      <p><small>${w.ctf} | ${w.date} | ${w.difficulty}</small></p>
-    </div>`;
-  recent.innerHTML=writeupsData.slice(0,3).map(card).join('');
-  all.innerHTML=writeupsData.map(card).join('');
+  <div class="writeup-card" onclick="loadWriteupDetail('${w.file}')">
+    <h3 class="writeup-title">${w.title}</h3>
+    <p>${w.description}</p>
+    <small>${w.ctf} | ${w.date} | ${w.difficulty}</small>
+  </div>`;
+  recent.innerHTML=writeupsData.slice(0,3).map(card).join("");
+  all.innerHTML=writeupsData.map(card).join("");
 }
-
 async function loadWriteupDetail(file){
   try{
-    const res=await fetch(`${baseUrl}/writeups/${file}`);
-    if(!res.ok)throw new Error('not found');
-    const md=await res.text();
-    document.getElementById('writeupsList').style.display='none';
-    document.getElementById('writeupDetail').style.display='block';
-    document.getElementById('writeupContent').innerHTML=marked.parse(md);
-    showSection('writeups');
-  }catch(e){alert('Impossible de charger le write-up');}
+    const r=await fetch(`${baseUrl}/writeups/${file}`);
+    if(!r.ok)throw 0;
+    const md=await r.text();
+    document.getElementById("writeupsList").style.display="none";
+    document.getElementById("writeupDetail").style.display="block";
+    document.getElementById("writeupContent").innerHTML=marked.parse(md);
+    showSection("writeups");
+  }catch{alert("Write-up introuvable");}
 }
-
 function showWriteupsList(){
-  document.getElementById('writeupDetail').style.display='none';
-  document.getElementById('writeupsList').style.display='block';
+  document.getElementById("writeupDetail").style.display="none";
+  document.getElementById("writeupsList").style.display="block";
 }
-
-function showSection(id,event){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if(event)event.target.classList.add('active');
-  if(id==='writeups')showWriteupsList();
+function showSection(id,e){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(e)e.target.classList.add("active");
+  if(id==="writeups")showWriteupsList();
 }
-
-function showError(msg){
-  document.getElementById('recentWriteups').innerHTML=`<div class="error">${msg}</div>`;
+function showError(m){
+  document.getElementById("recentWriteups").innerHTML=`<div class="error">${m}</div>`;
 }
-
 loadData();
 
-/* === MATRIX BACKGROUND === */
-const c=document.getElementById('matrix');
-const ctx=c.getContext('2d');
+/* fond Matrix */
+const c=document.getElementById("matrix"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight;}
-resize();
-window.addEventListener('resize',resize);
-const chars='01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
-const fontSize=16;
-let cols, drops;
-function initDrops(){
-  cols=Math.floor(c.width/fontSize);
-  drops=Array(cols).fill(1);
-}
-initDrops();
+resize();addEventListener("resize",resize);
+const chars="01アイウエオカキクケコサシスセソタチツテトナニヌネノ";
+const fontSize=16;let cols,drops;
+function init(){cols=Math.floor(c.width/fontSize);drops=Array(cols).fill(1);}
+init();
 function draw(){
-  ctx.fillStyle='rgba(10,14,39,0.15)';
+  ctx.fillStyle="rgba(10,14,39,0.15)";
   ctx.fillRect(0,0,c.width,c.height);
-  ctx.fillStyle='rgba(0,255,136,0.5)';
-  ctx.font=fontSize+'px monospace';
+  ctx.fillStyle="rgba(0,255,136,0.55)";
+  ctx.font=fontSize+"px monospace";
   for(let i=0;i<drops.length;i++){
-    const text=chars[Math.floor(Math.random()*chars.length)];
-    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-    if(drops[i]*fontSize>c.height && Math.random()>0.975)drops[i]=0;
+    const t=chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillText(t,i*fontSize,drops[i]*fontSize);
+    if(drops[i]*fontSize>c.height&&Math.random()>0.975)drops[i]=0;
     drops[i]++;
   }
 }
 setInterval(draw,50);
 </script>
-
 </body>
 </html>
