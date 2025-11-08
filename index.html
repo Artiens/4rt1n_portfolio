@@ -6,8 +6,8 @@
 <title>Portfolio CTF | Cybersécurité</title>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
-* {margin:0;padding:0;box-sizing:border-box;}
-:root {
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
   --bg-dark:#0a0e27;
   --bg-card:#1a1f3a;
   --accent:#00ff88;
@@ -15,50 +15,52 @@
   --text-dim:#a0a0a0;
   --border:#2a3f5f;
 }
-body {
-  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+body{
+  font-family:'Segoe UI',Tahoma,sans-serif;
   background:var(--bg-dark);
   color:var(--text);
   line-height:1.6;
   overflow-x:hidden;
+  position:relative;
 }
-canvas#matrix {
+canvas#matrix{
   position:fixed;
   top:0;left:0;
   width:100%;
   height:100%;
   z-index:-1;
-  opacity:0.15;
+  opacity:0.35;
   pointer-events:none;
 }
-header {
+header{
   background:linear-gradient(135deg,var(--bg-card) 0%,#0f1329 100%);
   padding:2rem 5%;
   border-bottom:2px solid var(--accent);
 }
-h1 {
+h1{
   font-size:2.3rem;
   color:var(--accent);
   text-shadow:0 0 10px rgba(0,255,136,0.3);
-  margin-bottom:.5rem;
 }
-.tagline {color:var(--text-dim);}
-nav {
+.tagline{color:var(--text-dim);}
+nav{
   background:var(--bg-card);
   padding:1rem 5%;
   border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:10;
 }
-.nav-content {display:flex;gap:2rem;max-width:1200px;margin:auto;}
-.nav-btn {
-  background:none;border:none;cursor:pointer;color:var(--text-dim);
-  transition:.3s;padding:.5rem 1rem;
+.nav-content{display:flex;gap:2rem;max-width:1200px;margin:auto;}
+.nav-btn{
+  background:none;border:none;cursor:pointer;
+  color:var(--text-dim);
+  padding:.5rem 1rem;
+  transition:.3s;
 }
 .nav-btn:hover,.nav-btn.active{color:var(--accent);}
 main{max-width:1200px;margin:auto;padding:2rem 5%;}
 .section{display:none;}
 .section.active{display:block;}
-.writeup-card {
+.writeup-card{
   background:var(--bg-card);
   border:1px solid var(--border);
   border-radius:8px;
@@ -69,7 +71,7 @@ main{max-width:1200px;margin:auto;padding:2rem 5%;}
 }
 .writeup-card:hover{border-color:var(--accent);transform:translateX(3px);}
 .writeup-title{color:var(--accent);}
-footer {
+footer{
   background:var(--bg-card);
   border-top:1px solid var(--border);
   text-align:center;
@@ -77,7 +79,7 @@ footer {
   margin-top:3rem;
   color:var(--text-dim);
 }
-.error {
+.error{
   background:#ff004444;
   border:1px solid #ff0044;
   padding:1rem;
@@ -98,14 +100,15 @@ footer {
 
 <nav>
   <div class="nav-content">
-    <button class="nav-btn active" onclick="showSection('overview')">Vue d'ensemble</button>
-    <button class="nav-btn" onclick="showSection('writeups')">Write-ups</button>
-    <button class="nav-btn" onclick="showSection('rankings')">Classements</button>
+    <button class="nav-btn active" onclick="showSection('overview', event)">Vue d'ensemble</button>
+    <button class="nav-btn" onclick="showSection('writeups', event)">Write-ups</button>
+    <button class="nav-btn" onclick="showSection('rankings', event)">Classements</button>
   </div>
 </nav>
 
 <main>
   <section id="overview" class="section active">
+    <h2>Challenges récents</h2>
     <div id="recentWriteups"></div>
   </section>
 
@@ -137,17 +140,20 @@ async function loadData(){
     displayWriteups();
     const r=await fetch(`${baseUrl}/rankings.json`);
     rankingsData=await r.json();
-  }catch(e){showError('Erreur de chargement');}
+  }catch(e){
+    showError('Erreur de chargement des données');
+  }
 }
 
 function displayWriteups(){
   const recent=document.getElementById('recentWriteups');
   const all=document.getElementById('writeupsList');
-  if(!writeupsData.length){recent.innerHTML='<p>Aucun write-up</p>';return;}
+  if(!writeupsData.length){recent.innerHTML='<p>Aucun write-up disponible.</p>';return;}
   const card=w=>`
     <div class="writeup-card" onclick="loadWriteupDetail('${w.file}')">
       <h3 class="writeup-title">${w.title}</h3>
       <p>${w.description}</p>
+      <p><small>${w.ctf} | ${w.date} | ${w.difficulty}</small></p>
     </div>`;
   recent.innerHTML=writeupsData.slice(0,3).map(card).join('');
   all.innerHTML=writeupsData.map(card).join('');
@@ -170,25 +176,28 @@ function showWriteupsList(){
   document.getElementById('writeupsList').style.display='block';
 }
 
-function showSection(id){
+function showSection(id,event){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+  if(event)event.target.classList.add('active');
   if(id==='writeups')showWriteupsList();
 }
 
-function showError(m){document.getElementById('recentWriteups').innerHTML=`<div class="error">${m}</div>`;}
+function showError(msg){
+  document.getElementById('recentWriteups').innerHTML=`<div class="error">${msg}</div>`;
+}
 
 loadData();
 
-/* --- MATRIX BACKGROUND --- */
+/* === MATRIX BACKGROUND === */
 const c=document.getElementById('matrix');
 const ctx=c.getContext('2d');
 function resize(){c.width=innerWidth;c.height=innerHeight;}
-resize();window.addEventListener('resize',resize);
-const chars='01アイウエオカキクケコサシスセソタチツテト';
-const fontSize=14;
+resize();
+window.addEventListener('resize',resize);
+const chars='01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
+const fontSize=16;
 let cols, drops;
 function initDrops(){
   cols=Math.floor(c.width/fontSize);
@@ -196,9 +205,9 @@ function initDrops(){
 }
 initDrops();
 function draw(){
-  ctx.fillStyle='rgba(10,14,39,0.1)';
+  ctx.fillStyle='rgba(10,14,39,0.15)';
   ctx.fillRect(0,0,c.width,c.height);
-  ctx.fillStyle='rgba(0,255,136,0.3)';
+  ctx.fillStyle='rgba(0,255,136,0.5)';
   ctx.font=fontSize+'px monospace';
   for(let i=0;i<drops.length;i++){
     const text=chars[Math.floor(Math.random()*chars.length)];
@@ -207,7 +216,8 @@ function draw(){
     drops[i]++;
   }
 }
-setInterval(draw,60);
+setInterval(draw,50);
 </script>
+
 </body>
 </html>
