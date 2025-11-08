@@ -1,0 +1,20 @@
+[
+    {
+      "title": "Buffer Overflow Master",
+      "ctf": "HackTheBox",
+      "date": "15 Oct 2024",
+      "difficulty": "Hard",
+      "description": "Exploitation d'un buffer overflow avec ASLR et DEP activés",
+      "tags": ["pwn", "binary-exploitation", "ROP"],
+      "file": "buffer-overflow.md"
+    },
+    {
+      "title": "SQL Injection Paradise",
+      "ctf": "Root-Me",
+      "date": "08 Oct 2024",
+      "difficulty": "Medium",
+      "description": "Exploitation d'une SQLi aveugle avec time-based injection",
+      "tags": ["web", "sql-injection", "python"],
+      "file": "sql-injection.md"
+    }
+  ]

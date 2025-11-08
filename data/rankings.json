@@ -1,0 +1,18 @@
+[
+    {
+      "rank": 1,
+      "competition": "CyberSec Challenge 2024",
+      "date": "Novembre 2024",
+      "points": 2850,
+      "participants": 200,
+      "team": "Solo"
+    },
+    {
+      "rank": 2,
+      "competition": "Root-Me CTF",
+      "date": "Octobre 2024",
+      "points": 2640,
+      "participants": 350,
+      "team": "Team Alpha"
+    }
+  ]
