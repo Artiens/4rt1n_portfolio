@@ -350,19 +350,19 @@
       setSize();
 
       const chars = '01アイウエオカキクケコサシスセソタチツテト';
-      const fontSize = 10; // petit pour discret
+      const fontSize = 15; // petit pour discret
       const columns = Math.floor(width / fontSize);
       const drops = new Array(columns).fill(1).map(()=> Math.floor(Math.random()*height/fontSize));
 
       function draw(){
-        ctx.fillStyle = 'rgba(10,10,20,0.04)'; // très léger trail
+        ctx.fillStyle = 'rgba(10,10,20,0.08)'; // très léger trail
         ctx.fillRect(0,0,width,height);
-        ctx.fillStyle = 'rgba(0,255,136,0.08)'; // faible visibilité
+        ctx.fillStyle = 'rgba(0,255,136,0.16)'; // faible visibilité
         ctx.font = fontSize + 'px monospace';
         for (let i=0;i<drops.length;i++){
           const text = chars[Math.floor(Math.random()*chars.length)];
           ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-          if (drops[i]*fontSize > height && Math.random() > 0.99) drops[i]=0;
+          if (drops[i]*fontSize > height && Math.random() > 0.95) drops[i]=0;
           drops[i]++;
         }
       }
