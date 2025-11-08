@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src https://raw.githubusercontent.com https://cdn.jsdelivr.net;">
+    <meta name="description" content="Portfolio de cybersécurité - Write-ups CTF et classements de compétitions">
+    <title>Portfolio CTF | Cybersécurité</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-card: #1a1f3a;
+            --accent: #00ff88;
+            --accent-dark: #00cc6a;
+            --text: #e0e0e0;
+            --text-dim: #a0a0a0;
+            --border: #2a3f5f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #0f1329 100%);
+            padding: 2rem 5%;
+            border-bottom: 2px solid var(--accent);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        nav {
+            background: var(--bg-card);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--accent);
+        }
+
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 5%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .writeup-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .writeup-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .writeup-card:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .writeup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .writeup-title {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .difficulty {
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .difficulty.easy { background: #00ff8844; color: #00ff88; }
+        .difficulty.medium { background: #ffaa0044; color: #ffaa00; }
+        .difficulty.hard { background: #ff004444; color: #ff4444; }
+
+        .writeup-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .writeup-desc {
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: var(--border);
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .ranking-table {
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .ranking-table th,
+        .ranking-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .ranking-table th {
+            background: var(--border);
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .ranking-table tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ranking-table tr:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .rank.gold { color: #ffd700; }
+        .rank.silver { color: #c0c0c0; }
+        .rank.bronze { color: #cd7f32; }
+
+        .participants {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .error {
+            background: #ff004444;
+            border: 1px solid #ff0044;
+            padding: 1rem;
+            border-radius: 5px;
+            color: #ff4444;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+            color: var(--accent);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .markdown-content h2 {
+            font-size: 1.5rem;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.2rem;
+        }
+
+        .markdown-content p {
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content code {
+            background: var(--bg-dark);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            color: var(--accent);
+            font-family: 'Courier New', monospace;
+        }
+
+        .markdown-content pre {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .markdown-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .markdown-content ul, .markdown-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .markdown-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .markdown-content a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            background: var(--border);
+            color: var(--text);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        footer {
+            background: var(--bg-card);
+            padding: 2rem 5%;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 5rem;
+            color: var(--text-dim);
+        }
+
+        .terminal-effect {
+            font-family: 'Courier New', monospace;
+            color: var(--accent);
+        }
+
+        .setup-info {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .setup-info h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .setup-info code {
+            background: var(--bg-dark);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            color: var(--accent);
+        }
+
+        .setup-info pre {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrixBg"></div>
+
+    <header>
+        <div class="header-content">
+            <div>
+                <h1 class="terminal-effect">&gt; Portfolio CTF_</h1>
+                <p class="tagline">Spécialiste en Cybersécurité | Compétiteur CTF</p>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-content">
+            <button class="nav-btn active" onclick="showSection('overview')">Vue d'ensemble</button>
+            <button class="nav-btn" onclick="showSection('writeups')">Write-ups</button>
+            <button class="nav-btn" onclick="showSection('rankings')">Classements</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Section Vue d'ensemble -->
+        <section id="overview" class="section active">
+            <div id="setupInfo" class="setup-info">
+                <h3>📦 Configuration GitHub nécessaire</h3>
+                <p>Pour afficher vos données, configurez les URLs de votre repository GitHub ci-dessous :</p>
+                <div style="margin-top: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">URL de base (raw.githubusercontent.com) :</label>
+                    <input type="text" id="githubBaseUrl" 
+                           placeholder="https://raw.githubusercontent.com/username/repo/main/data"
+                           style="width: 100%; padding: 0.5rem; background: var(--bg-dark); color: var(--text); border: 1px solid var(--border); border-radius: 5px;">
+                    <button onclick="saveConfig()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--accent); color: var(--bg-dark); border: none; border-radius: 5px; cursor: pointer;">Sauvegarder et charger</button>
+                </div>
+                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-dark); border-radius: 5px;">
+                    <p style="color: var(--text-dim); font-size: 0.9rem;"> <code>https://raw.githubusercontent.com/Artiens/4rt1n_portfolio/main/data</code></p>
+                </div>
+            </div>
+
+            <div id="statsSection" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="statChallenges">-</div>
+                        <div class="stat-label">Challenges résolus</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statCTFs">-</div>
+                        <div class="stat-label">CTFs participés</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statWriteups">-</div>
+                        <div class="stat-label">Write-ups publiés</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statRanking">-</div>
+                        <div class="stat-label">Meilleur classement</div>
+                    </div>
+                </div>
+
+                <h2 style="color: var(--accent); margin-bottom: 1.5rem;">📌 Write-ups récents</h2>
+                <div class="writeup-grid" id="recentWriteups">
+                    <div class="loading">Chargement...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Write-ups -->
+        <section id="writeups" class="section">
+            <div id="writeupsList">
+                <h2 style="color: var(--accent); margin-bottom: 1.5rem;">📝 Tous les Write-ups</h2>
+                <div class="writeup-grid" id="allWriteups">
+                    <div class="loading">Chargement...</div>
+                </div>
+            </div>
+            <div id="writeupDetail" style="display: none;">
+                <button class="back-btn" onclick="showWriteupsList()">← Retour à la liste</button>
+                <div class="markdown-content" id="writeupContent"></div>
+            </div>
+        </section>
+
+        <!-- Section Classements -->
+        <section id="rankings" class="section">
+            <h2 style="color: var(--accent); margin-bottom: 1.5rem;">🏆 Classements Compétitions</h2>
+            <div id="rankingsTable">
+                <div class="loading">Chargement...</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Portfolio CTF | Cybersécurité</p>
+        <p class="terminal-effect" style="margin-top: 0.5rem;">Stay curious, stay secure_</p>
+    </footer>
+
+    <script>
+        // Configuration
+        let config = {
+            baseUrl: localStorage.getItem('githubBaseUrl') || ''
+        };
+
+        // Données
+        let writeupsData = [];
+        let rankingsData = [];
+
+        // Sauvegarde de la configuration
+        function saveConfig() {
+            const baseUrl = document.getElementById('githubBaseUrl').value.trim();
+            if (!baseUrl) {
+                alert('Veuillez entrer une URL valide');
+                return;
+            }
+            localStorage.setItem('githubBaseUrl', baseUrl);
+            config.baseUrl = baseUrl;
+            document.getElementById('setupInfo').style.display = 'none';
+            document.getElementById('statsSection').style.display = 'block';
+            loadData();
+        }
+
+        // Chargement des données depuis GitHub
+        async function loadData() {
+            if (!config.baseUrl) {
+                return;
+            }
+
+            try {
+                // Charger les write-ups
+                const writeupsResponse = await fetch(`${config.baseUrl}/writeups.json`);
+                if (writeupsResponse.ok) {
+                    writeupsData = await writeupsResponse.json();
+                    displayWriteups();
+                    updateStats();
+                }
+
+                // Charger les classements
+                const rankingsResponse = await fetch(`${config.baseUrl}/rankings.json`);
+                if (rankingsResponse.ok) {
+                    rankingsData = await rankingsResponse.json();
+                    displayRankings();
+                    updateStats();
+                }
+            } catch (error) {
+                console.error('Erreur de chargement:', error);
+                showError('Erreur lors du chargement des données. Vérifiez votre configuration.');
+            }
+        }
+
+        // Affichage des write-ups
+        function displayWriteups() {
+            const recentContainer = document.getElementById('recentWriteups');
+            const allContainer = document.getElementById('allWriteups');
+            
+            if (writeupsData.length === 0) {
+                recentContainer.innerHTML = '<p style="color: var(--text-dim);">Aucun write-up disponible</p>';
+                allContainer.innerHTML = '<p style="color: var(--text-dim);">Aucun write-up disponible</p>';
+                return;
+            }
+
+            const writeupHTML = (writeup) => `
+                <div class="writeup-card" onclick="loadWriteupDetail('${writeup.file}')">
+                    <div class="writeup-header">
+                        <div>
+                            <h3 class="writeup-title">${writeup.title}</h3>
+                            <div class="writeup-meta">
+                                <span>🏆 ${writeup.ctf}</span>
+                                <span>📅 ${writeup.date}</span>
+                            </div>
+                        </div>
+                        <span class="difficulty ${writeup.difficulty.toLowerCase()}">${writeup.difficulty}</span>
+                    </div>
+                    <p class="writeup-desc">${writeup.description}</p>
+                    <div class="tags">
+                        ${writeup.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Afficher les 3 derniers pour la vue d'ensemble
+            recentContainer.innerHTML = writeupsData.slice(0, 3).map(writeupHTML).join('');
+            
+            // Afficher tous les write-ups
+            allContainer.innerHTML = writeupsData.map(writeupHTML).join('');
+        }
+
+        // Charger et afficher un write-up en détail
+        async function loadWriteupDetail(filename) {
+            try {
+                const response = await fetch(`${config.baseUrl}/writeups/${filename}`);
+                if (!response.ok) throw new Error('Write-up non trouvé');
+                
+                const markdown = await response.text();
+                const html = marked.parse(markdown);
+                
+                document.getElementById('writeupsList').style.display = 'none';
+                document.getElementById('writeupDetail').style.display = 'block';
+                document.getElementById('writeupContent').innerHTML = html;
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Impossible de charger le write-up');
+            }
+        }
+
+        // Retour à la liste des write-ups
+        function showWriteupsList() {
+            document.getElementById('writeupDetail').style.display = 'none';
+            document.getElementById('writeupsList').style.display = 'block';
+        }
+
+        // Affichage des classements
+        function displayRankings() {
+            const container = document.getElementById('rankingsTable');
+            
+            if (rankingsData.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-dim);">Aucun classement disponible</p>';
+                return;
+            }
+
+            const getRankClass = (rank) => {
+                if (rank === 1) return 'gold';
+                if (rank === 2) return 'silver';
+                if (rank === 3) return 'bronze';
+                return '';
+            };
+
+            const getRankDisplay = (rank) => {
+                if (rank === 1) return '1er';
+                if (rank === 2) return '2e';
+                if (rank === 3) return '3e';
+                return `${rank}e`;
+            };
+
+            container.innerHTML = `
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Compétition</th>
+                            <th>Date</th>
+                            <th>Points</th>
+                            <th>Participants</th>
+                            <th>Équipe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rankingsData.map(ranking => `
+                            <tr>
+                                <td><span class="rank ${getRankClass(ranking.rank)}">${getRankDisplay(ranking.rank)}</span></td>
+                                <td>${ranking.competition}</td>
+                                <td>${ranking.date}</td>
+                                <td>${ranking.points}</td>
+                                <td><span class="participants">${ranking.rank}/${ranking.participants}</span></td>
+                                <td>${ranking.team}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Mise à jour des statistiques
+        function updateStats() {
+            if (writeupsData.length > 0) {
+                document.getElementById('statWriteups').textContent = writeupsData.length;
+                
+                // Calculer les CTFs uniques
+                const uniqueCTFs = new Set(writeupsData.map(w => w.ctf));
+                document.getElementById('statCTFs').textContent = uniqueCTFs.size;
+                
+                // Compter les challenges (estimation)
+                document.getElementById('statChallenges').textContent = writeupsData.length;
+            }
+
+            if (rankingsData.length > 0) {
+                const bestRank = Math.min(...rankingsData.map(r => r.rank));
+                const bestRanking = rankingsData.find(r => r.rank === bestRank);
+                document.getElementById('statRanking').textContent = 
+                    `${bestRank}/${bestRanking.participants}`;
+            }
+        }
+
+        // Afficher une erreur
+        function showError(message) {
+            const sections = ['recentWriteups', 'allWriteups', 'rankingsTable'];
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerHTML = `<div class="error">${message}</div>`;
+                }
+            });
+        }
+
+        // Navigation entre sections
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            const buttons = document.querySelectorAll('.nav-btn');
+            
+            sections.forEach(s => s.classList.remove('active'));
+            buttons.forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+
+            // Réinitialiser la vue des write-ups
+            if (sectionId === 'writeups') {
+                showWriteupsList();
+            }
+        }
+
+        // Effet Matrix en arrière-plan
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        document.getElementById('matrixBg').appendChild(canvas);
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = '01アイウエオカキクケコサシスセソタチツテト';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 14, 39, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff88';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Initialisation
+        window.addEventListener('DOMContentLoaded', () => {
+            if (config.baseUrl) {
+                document.getElementById('githubBaseUrl').value = config.baseUrl;
+                document.getElementById('setupInfo').style.display = 'none';
+                document.getElementById('statsSection').style.display = 'block';
+                loadData();
+            }
+        });
+    </script>
+</body>
+</html>
