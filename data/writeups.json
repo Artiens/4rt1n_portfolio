@@ -1,20 +1,11 @@
 [
     {
-      "title": "Buffer Overflow Master",
-      "ctf": "HackTheBox",
-      "date": "15 Oct 2024",
+      "title": "Seashell Database",
+      "ctf": "DVC recrutement 2025",
+      "date": "Septembre 2025",
       "difficulty": "Hard",
-      "description": "Exploitation d'un buffer overflow avec ASLR et DEP activés",
-      "tags": ["pwn", "binary-exploitation", "ROP"],
-      "file": "buffer.md"
-    },
-    {
-      "title": "SQL Injection Paradise",
-      "ctf": "Root-Me",
-      "date": "08 Oct 2024",
-      "difficulty": "Medium",
-      "description": "Exploitation d'une SQLi aveugle avec time-based injection",
-      "tags": ["web", "sql-injection", "python"],
-      "file": "sql-injection.md"
+      "description": "Exploitation d'un reverseshell à l'aveugle",
+      "tags": ["web", "server-side", "reverse-shell", "RCE"],
+      "file": "Seashell_Database.md"
     }
   ]
