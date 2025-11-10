@@ -18,7 +18,7 @@ Super cmd fonctionne et à priori le firewall ne posera pas de problème.
 
 Allons sur https://www.revshells.com/
 
-Après avoir tester plusieurs types de shell, je comprends qu'il y a sûrement des restrictions sur les exécutables du serveur.
+Après avoir testé plusieurs types de shell, je comprends qu'il y a sûrement des restrictions sur les exécutables du serveur.
 
 Je tente une injection de %00 byte null pour générer une erreur et obtenir un retour mais cela rate.
 
