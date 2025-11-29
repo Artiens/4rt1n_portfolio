@@ -7,5 +7,14 @@
       "description": "Exploitation d'un reverseshell à l'aveugle",
       "tags": ["web", "server-side", "reverse-shell", "RCE"],
       "file": "Seashell_Database.md"
+    },
+    {
+      "title": "Glitch Clock",
+      "ctf": "GREHACK 2025",
+      "date": "Novembre 2025",
+      "difficulty": "Hard",
+      "description": "Exploitation d'un glitch hardware",
+      "tags": ["glitch clock", "hardware"],
+      "file": "Glitch_Clock.md"
     }
   ]

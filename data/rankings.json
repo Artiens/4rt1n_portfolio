@@ -1,5 +1,13 @@
 [
     {
+        "rank": 2,
+        "competition": "GREHACK",
+        "date": "Novembre 2025",
+        "points": 4349,
+        "participants": 41,
+        "team": "DaVinciCode"
+    },
+    {
         "rank": 85,
         "competition": "ECW",
         "date": "Octobre 2025",
