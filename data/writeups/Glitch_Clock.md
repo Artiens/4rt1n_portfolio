@@ -6,7 +6,7 @@
 
 Ce challenge est un **exercice de fault injection** basé sur une carte **ChipWhisperer-Lite CW1173** équipée d’une cible **Cortex-M4 STM32F3** 
 
-![image.png](GREHACK/image.png)
+![image.png](Glitch_Clock/image.png)
 
 Le firmware contient :
 
