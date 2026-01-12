@@ -1,5 +1,13 @@
 [
     {
+      "rank": 1,
+      "competition": "Oteria Cyber Cup",
+      "date": "Janvier 2026",
+      "points": "8590",
+      "participants": 80,
+      "team": "DaVinciCode"
+    },
+    {
         "rank": 2,
         "competition": "GREHACK",
         "date": "Novembre 2025",
@@ -30,13 +38,5 @@
       "points": 2640,
       "participants": 350,
       "team": "DVC"
-    },
-    {
-      "rank": 1,
-      "competition": "Oteria Cyber Cup",
-      "date": "Janvier 2026",
-      "points": "8590",
-      "participants": 80,
-      "team": "DaVinciCode"
     }
   ]
